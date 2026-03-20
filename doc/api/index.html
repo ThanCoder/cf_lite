@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="cf_lite API docs, for the Dart programming language.">
+  <title>cf_lite - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">cf_lite package</li>
+  </ol>
+  <div class="self-name">cf_lite</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="config-box-lite-cflite-">Config Box Lite (CFLite) 📦</h1>
+<p>A lightweight, JSON-based persistent key-value storage for Dart and Flutter. <strong>CFLite</strong> simplifies local data management with powerful type-casting, reactive event listeners, and zero boilerplate.</p>
+<h2 id="-key-features">✨ Key Features</h2>
+<ul>
+<li><strong>🚀 Easy Initialization:</strong> Set up your database with a single line by specifying a JSON file path.</li>
+<li><strong>🛡️ Type-Safe Retrieval:</strong> Specialized getters (<code>getString</code>, <code>getBool</code>, <code>getInt</code>, <code>getDouble</code>) ensure data integrity.</li>
+<li><strong>🧬 Advanced Generic Support:</strong> Retrieve complex data types like <code>List&lt;String&gt;</code>, <code>List&lt;int&gt;</code>, or <code>List&lt;Map&gt;</code> with automatic casting using <code>getValue&lt;T&gt;</code>.</li>
+<li><strong>💡 Smart Fallbacks:</strong> Every getter supports a <code>def</code> (default) parameter, returning a safe value if a key is missing or types mismatch.</li>
+<li><strong>🔔 Reactive Data:</strong> Built-in Event Listener to track <code>put</code>, <code>delete</code>, or <code>update</code> actions in real-time.</li>
+<li><strong>🏗️ Zero Boilerplate:</strong> No complex schemas, tables, or migrations required.</li>
+</ul>
+<hr>
+<h2 id="-getting-started">🚀 Getting Started</h2>
+<h3 id="1-initialization">1. Initialization</h3>
+<p>Initialize the instance and link it to your JSON file.</p>
+<pre class="language-dart"><code class="language-dart">final db = CFLite.getInstance();
+await db.init(dbPath: 'test.db.json');
+</code></pre>
+<h2 id="example-json-data">Example Json Data</h2>
+<pre class="language-json"><code class="language-json">{
+  "test": "test one",
+  "name": 12,
+  "list": [1, 2, 3, 4, 5],
+  "str_list": ["than", "coder"],
+  "map": { "name": "thancoder" },
+  "map_list": [{ "name": "thancoder" }]
+}
+</code></pre>
+<h2 id="example">Example</h2>
+<pre class="language-dart"><code class="language-dart">///
+final db = CFLite.getInstance();
+await db.init(dbPath: 'test.db.json'); //important
+
+
+await db.put('name', 12);
+await db.put&lt;String&gt;('test', 'test one');
+await db.put('list', [1,2,3,4,5]);
+
+print(db.getString('name')); // 12
+print(db.getBool('list', def: false)); //false
+print(db.getInt('list', def: 1)); // 1
+print(db.getDouble('list', def: 0.1)); // 0.1
+
+// List
+print(db.getList&lt;int&gt;('list')); //[1, 2, 3, 4, 5]
+print(db.getList&lt;String&gt;('str_list')); //["than", "coder"]
+
+//Map
+print(db.getMap('map')); //{name: thancoder}
+print(db.getMap&lt;String,dynamic&gt;('map')); //{name: thancoder}
+print(db.getMap&lt;dynamic,dynamic&gt;('map')); //{name: thancoder}
+
+// Value Cast
+
+print(db.getValue&lt;bool&gt;('list', def: false)); //false
+print(db.getValue&lt;int&gt;('list', def: 1)); // 1
+print(db.getValue&lt;double&gt;('list', def: 0.1)); // 0.1
+print(db.getValue&lt;String&gt;('list', def: 'i str')); //[1, 2, 3, 4, 5] but String Type
+
+print(db.getValue&lt;List&lt;int&gt;&gt;('list', def: [])); //[1, 2, 3, 4, 5]
+print(db.getValue&lt;List&lt;String&gt;&gt;('str_list', def: [])); //[than, coder]
+print(db.getValue&lt;Map&lt;String, dynamic&gt;&gt;('map', def: {})); // {name: thancoder}
+print(db.getValue&lt;Map&lt;dynamic, dynamic&gt;&gt;('map', def: {}),); // {name: thancoder}
+print(db.getValue&lt;List&lt;Map&lt;dynamic, dynamic&gt;&gt;&gt;('map_list', def: []),); //[{name: thancoder}]
+</code></pre>
+<h3 id="event-listener">Event Listener</h3>
+<pre class="language-dart"><code class="language-dart">db.event.listen((data) {
+  print('event type: ${data.type.name} key:${data.key} - val:${data.value}');
+});
+</code></pre>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="cf_lite">
+  <span class="name"><a href="cf_lite/">cf_lite</a></span> 
+
+</dt>
+<dd>Support for doing something awesome.
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">cf_lite package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">cf_lite</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="cf_lite/">cf_lite</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    cf_lite
+      0.1.0
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
