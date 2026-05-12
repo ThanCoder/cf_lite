@@ -26,6 +26,9 @@ class CFLite {
 
   Stream<CFEvent> get event => _eventController.stream;
 
+  /// All Data
+  Map<String, dynamic> get data => _data;
+
   Future<void> init({
     required String? dbPath,
     GetDataCallback? getData,
@@ -61,7 +64,7 @@ class CFLite {
       CFEvent(key: key, value: value, type: CFEventType.put),
     );
 
-    _save();
+    await _save();
   }
 
   ///
@@ -90,13 +93,17 @@ class CFLite {
   /// Save Data
   ///
   Future<void> _save() async {
-    if (_setData != null) {
-      await _setData!(_data);
-      return;
+    try {
+      if (_setData != null) {
+        await _setData!(_data);
+        return;
+      }
+      // file
+      final contents = jsonEncode(_data);
+      await dbFile.writeAsString(contents);
+    } catch (e) {
+      print('[CFLite:_save]: $e');
     }
-    // file
-    final contents = jsonEncode(_data);
-    await dbFile.writeAsString(contents);
   }
 
   ///
@@ -140,18 +147,19 @@ class CFLite {
   }
 
   ///
-  /// ### Get bool Type
+  /// ### Get List Type
+  /// List<[item type]> getList<[item type]>
   ///
   List<T> getList<T>(
     String key, {
-    List<T> def = const [],
+    required List<T> def,
     OnGetValueErrorCallback? onError,
   }) {
-    return getValue(key, def: def, onError: onError);
+    return getValue<List<T>>(key, def: def, onError: onError);
   }
 
   ///
-  /// ### Get bool Type
+  /// ### Get getMap Type
   ///
   Map<K, V> getMap<K, V>(
     String key, {
@@ -211,6 +219,7 @@ class CFLite {
         if (T == List<Map<dynamic, dynamic>>) {
           return List<Map<dynamic, dynamic>>.from(value) as T;
         }
+        // print('q: $value');
       }
     } catch (e) {
       // print('error: $e');
@@ -218,5 +227,32 @@ class CFLite {
       return def;
     }
     return def;
+  }
+
+  ///
+  /// ### Get Map List
+  ///
+  List<Map<String, dynamic>> getMapList(String key) {
+    final value = _data[key];
+    if (value == null) return [];
+    if (value is List<dynamic>) {
+      try {
+        return List<Map<String, dynamic>>.from(value);
+      } catch (e) {
+        print('[getMapList]: $e');
+      }
+    }
+    // print(value.runtimeType);
+    return [];
+  }
+
+  Future<void> putMapList(String key, List<Map<String, dynamic>> value) async {
+    _data[key] = value;
+    // event
+    _eventController.add(
+      CFEvent(key: key, value: value, type: CFEventType.put),
+    );
+
+    await _save();
   }
 }

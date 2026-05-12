@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the values constant from the CFEventType enum, for the Dart programming language.">
-  <title>values constant - CFEventType enum - cf_lite library - Dart API</title>
+  <meta name="description" content="API docs for the getMapList method from the CFLite class, for the Dart programming language.">
+  <title>getMapList method - CFLite class - cf_lite library - Dart API</title>
 
 
   
@@ -26,10 +26,10 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">cf_lite</a></li>
     <li><a href="../../cf_lite/">cf_lite.dart</a></li>
-    <li><a href="../../cf_lite/CFEventType.html">CFEventType</a></li>
-    <li class="self-crumb">values constant</li>
+    <li><a href="../../cf_lite/CFLite-class.html">CFLite</a></li>
+    <li class="self-crumb">getMapList method</li>
   </ol>
-  <div class="self-name">values</div>
+  <div class="self-name">getMapList</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -46,32 +46,49 @@
 <div
     id="dartdoc-main-content"
     class="main-content"
-    data-above-sidebar="cf_lite&#47;CFEventType-enum-sidebar.html"
+    data-above-sidebar="cf_lite&#47;CFLite-class-sidebar.html"
     data-below-sidebar="">
     <div>
-<h1><span class="kind-property">values</span> constant 
+<h1><span class="kind-method">getMapList</span> method 
 </h1></div>
 
-    
-      <section class="multi-line-signature">
-        
-        <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../cf_lite/CFEventType.html">CFEventType</a></span>&gt;</span>
-        const <span class="name ">values</span>
-        
-
-      </section>
+    <section class="multi-line-signature">
       
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>
+<span class="name ">getMapList</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="getMapList-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span></span></li>
+</ol>)
+
+      
+
+    </section>
+    
 <section class="desc markdown">
-  <p>A constant List of the values in this enum, in order of their declaration.</p>
+  <h3 id="get-map-list">Get Map List</h3>
 </section>
 
-      
-
 
     
-</div> <!-- /.main-content -->
-<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">List&lt;Map&lt;String, dynamic&gt;&gt; getMapList(String key) {
+  final value = _data[key];
+  if (value == null) return [];
+  if (value is List&lt;dynamic&gt;) {
+    try {
+      return List&lt;Map&lt;String, dynamic&gt;&gt;.from(value);
+    } catch (e) {
+      print(&#39;[getMapList]: $e&#39;);
+    }
+  }
+  &#47;&#47; print(value.runtimeType);
+  return [];
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
 <header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
@@ -80,14 +97,14 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">cf_lite</a></li>
     <li><a href="../../cf_lite/">cf_lite</a></li>
-    <li><a href="../../cf_lite/CFEventType.html">CFEventType</a></li>
-    <li class="self-crumb">values constant</li>
+    <li><a href="../../cf_lite/CFLite-class.html">CFLite</a></li>
+    <li class="self-crumb">getMapList method</li>
 </ol>
 
-  <h5>CFEventType enum</h5>
-  <div id="dartdoc-sidebar-left-content"></div>
-</div><!--/.sidebar-offcanvas-->
-<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>CFLite class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
 </div><!--/.sidebar-offcanvas-->
 </main>
 <footer>
