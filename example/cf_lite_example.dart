@@ -4,6 +4,12 @@ void main() async {
   final db = CFLite.getInstance();
   await db.init(dbPath: 'test.db.json');
 
+  // db.put('asc', false);
+  // db.putWithoutSave(key, value);
+  // db.saveAll();
+
+  // print(db.getBool('asc', def: true));
+
   db.event.listen((data) {
     print('event type: ${data.type.name} key:${data.key} - val:${data.value}');
   });

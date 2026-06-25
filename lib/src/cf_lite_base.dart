@@ -64,7 +64,20 @@ class CFLite {
       CFEvent(key: key, value: value, type: CFEventType.put),
     );
 
-    await _save();
+    await saveAll();
+  }
+
+  ///
+  /// ### Add Without Save
+  ///
+  /// ### You Need To Call `saveAll` Function !!!!
+  ///
+  void putWithoutSave<T>(String key, T value) {
+    _data[key] = value;
+    // event
+    _eventController.add(
+      CFEvent(key: key, value: value, type: CFEventType.put),
+    );
   }
 
   ///
@@ -77,7 +90,7 @@ class CFLite {
       CFEvent(key: key, value: null, type: CFEventType.remove),
     );
 
-    _save();
+    await saveAll();
   }
 
   ///
@@ -86,13 +99,13 @@ class CFLite {
   Future<void> clearAll() async {
     _data.clear();
 
-    _save();
+    await saveAll();
   }
 
   ///
   /// Save Data
   ///
-  Future<void> _save() async {
+  Future<void> saveAll() async {
     try {
       if (_setData != null) {
         await _setData!(_data);
@@ -102,7 +115,7 @@ class CFLite {
       final contents = jsonEncode(_data);
       await dbFile.writeAsString(contents);
     } catch (e) {
-      print('[CFLite:_save]: $e');
+      print('[CFLite:saveAll]: $e');
     }
   }
 
@@ -114,7 +127,7 @@ class CFLite {
     String def = '',
     OnGetValueErrorCallback? onError,
   }) {
-    return getValue(key, def: def, onError: onError);
+    return getValue<String>(key, def: def, onError: onError);
   }
 
   ///
@@ -132,7 +145,7 @@ class CFLite {
     double def = 0.0,
     OnGetValueErrorCallback? onError,
   }) {
-    return getValue(key, def: def, onError: onError);
+    return getValue<double>(key, def: def, onError: onError);
   }
 
   ///
@@ -143,7 +156,7 @@ class CFLite {
     bool def = false,
     OnGetValueErrorCallback? onError,
   }) {
-    return getValue(key, def: def, onError: onError);
+    return getValue<bool>(key, def: def, onError: onError);
   }
 
   ///
@@ -180,53 +193,59 @@ class CFLite {
     OnGetValueErrorCallback? onError,
   }) {
     final value = _data[key];
-    // print(
-    //   'type: $T - defType: ${def.runtimeType} - value: ${value.runtimeType}',
-    // );
+
+    if (value == null) return def;
+
     try {
+      // ===== INT =====
       if (T == int) {
-        return (int.tryParse(value) ?? def) as T;
+        if (value is int) return value as T;
+        return (int.tryParse(value.toString()) ?? def) as T;
       }
+
+      // ===== BOOL =====
       if (T == bool) {
-        return (bool.tryParse(value) ?? def) as T;
+        if (value is bool) return value as T;
+        if (value is int) return (value == 1) as T;
+        if (value.toString().toLowerCase() == 'true') return true as T;
+        if (value.toString().toLowerCase() == 'false') return false as T;
+        return def;
       }
+
+      // ===== DOUBLE =====
       if (T == double) {
-        return (double.tryParse(value) ?? def) as T;
+        if (value is double) return value as T;
+        if (value is int) return value.toDouble() as T;
+        return (double.tryParse(value.toString()) ?? def) as T;
       }
+
+      // ===== STRING =====
       if (T == String) {
-        final val = value ?? def;
-        return val.toString() as T;
+        return value.toString() as T;
       }
 
-      // map
-      if (T == Map<dynamic, dynamic>) {
-        return Map<dynamic, dynamic>.from(value as Map<dynamic, dynamic>) as T;
-      }
-      if (T == Map<String, dynamic>) {
-        return Map<String, dynamic>.from(value as Map<String, dynamic>) as T;
+      // ===== MAPS =====
+      // value က Map ဖြစ်နေရင် အပြင်က တောင်းတဲ့ Type (T) အတိုင်း တိုက်ရိုက် Cast လုပ်ပေးခြင်း
+      if (value is Map) {
+        return Map.from(value) as T;
       }
 
+      // ===== LISTS =====
+      // value က List ဖြစ်နေရင် အပြင်က တောင်းတဲ့ Type (T) အတိုင်း dynamic cast လုပ်ပေးခြင်း
       if (value is List) {
-        if (T == List<String>) {
-          return List<String>.from(value) as T;
-        }
-        if (T == List<int>) {
-          return List<int>.from(value) as T;
-        }
-        if (T == List<Map<String, dynamic>>) {
-          return List<Map<String, dynamic>>.from(value) as T;
-        }
-        if (T == List<Map<dynamic, dynamic>>) {
-          return List<Map<dynamic, dynamic>>.from(value) as T;
-        }
-        // print('q: $value');
+        return List.from(value) as T;
       }
     } catch (e) {
-      // print('error: $e');
       onError?.call(e.toString());
       return def;
     }
-    return def;
+
+    // ဘယ် Type နဲ့မှ မကိုက်ညီရင်လည်း တိုက်ရိုက် Cast လုပ်ကြည့်မယ် (ဥပမာ Custom Object Type များအတွက်)
+    try {
+      return value as T;
+    } catch (_) {
+      return def;
+    }
   }
 
   ///
@@ -253,6 +272,6 @@ class CFLite {
       CFEvent(key: key, value: value, type: CFEventType.put),
     );
 
-    await _save();
+    await saveAll();
   }
 }

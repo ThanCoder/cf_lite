@@ -1,4 +1,10 @@
-# 0.2.0
+# 0.3.1
+
+- Fixed `Default Error`
+- Added `putWithoutSave`
+- Added `saveAll`
+
+#@ 0.2.0
 
 - Added `Now You Can See All Your Data in CFLite class.`
 - Added `getMapList`

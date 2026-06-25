@@ -1,14 +1,14 @@
 name: cf_lite
 description: Config Box Lite is a lightweight, JSON-based persistent key-value storage solution for Dart and Flutter applications. It provides a simple, asynchronous API to store, retrieve, and listen to data changes with robust type-casting support for primitives, Lists, and Maps.
-version: 0.2.0
+version: 0.3.1
 repository: https://github.com/ThanCoder/cf_lite
 
 environment:
   sdk: ^3.11.0
 
 # Add regular dependencies here.
-dependencies:
-  # path: ^1.9.0
+# dependencies:
+# path: ^1.9.0
 
 dev_dependencies:
   lints: ^6.0.0
